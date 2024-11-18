@@ -174,6 +174,88 @@ TsbTab:AddToggle({
     end
 })
 
+local Players = game:GetService("Players")
+local UserInputService = game:GetService("UserInputService")
+local RunService = game:GetService("RunService")
+local Camera = workspace.CurrentCamera
+local LocalPlayer = Players.LocalPlayer
+
+-- Function to find the nearest player
+local function getNearestPlayer()
+    local nearestPlayer = nil
+    local shortestDistance = math.huge
+
+    for _, player in pairs(Players:GetPlayers()) do
+        if player ~= LocalPlayer and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+            local distance = (player.Character.HumanoidRootPart.Position - LocalPlayer.Character.HumanoidRootPart.Position).Magnitude
+            if distance < shortestDistance then
+                shortestDistance = distance
+                nearestPlayer = player
+            end
+        end
+    end
+
+    return nearestPlayer
+end
+
+-- Function to update the camera to look at the nearest player
+local function lockCameraToPlayer(targetPlayer)
+    if targetPlayer and targetPlayer.Character and targetPlayer.Character:FindFirstChild("HumanoidRootPart") then
+        local targetPosition = targetPlayer.Character.HumanoidRootPart.Position
+        Camera.CFrame = CFrame.new(Camera.CFrame.Position, targetPosition)
+    end
+end
+
+-- Toggle for Camera Lock to Nearest Player
+TsbTab:AddToggle({
+    Name = "Camera Lock to Nearest Player",
+    Default = false,  -- Default state of the toggle is off
+    Callback = function(Value)
+        local cameraLockEnabled = Value
+        local holdingF = false
+
+        -- When the toggle is enabled or disabled, reset holdingF
+        if cameraLockEnabled then
+            -- Check for holding the F key
+            UserInputService.InputBegan:Connect(function(input)
+                if input.KeyCode == Enum.KeyCode.F then
+                    holdingF = true
+                end
+            end)
+
+            UserInputService.InputEnded:Connect(function(input)
+                if input.KeyCode == Enum.KeyCode.F then
+                    holdingF = false
+                end
+            end)
+
+            -- Continuously update the camera when holding F if camera lock is enabled
+            RunService.RenderStepped:Connect(function()
+                if cameraLockEnabled and holdingF then
+                    local nearestPlayer = getNearestPlayer()
+                    lockCameraToPlayer(nearestPlayer)
+                end
+            end)
+        end
+
+        -- Ensure the camera lock is functional after respawning
+        Players.LocalPlayer.CharacterAdded:Connect(function()
+            -- Reset the camera lock state when respawned
+            if cameraLockEnabled then
+                holdingF = false  -- Reset holding state if the character respawns
+            end
+        end)
+        
+        print("Camera Lock " .. (Value and "Enabled" or "Disabled"))
+    end    
+})
+
+--[[  
+Name = <string> - The name of the toggle.
+Default = <bool> - The default value of the toggle.
+Callback = <function> - The function of the toggle.
+]] 
+
 
 local LSTab = Window:MakeTab({
 	Name = "No Limit Lifting Simulator",
