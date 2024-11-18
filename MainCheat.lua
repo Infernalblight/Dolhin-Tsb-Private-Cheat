@@ -258,7 +258,7 @@ end
 
 -- Add Toggle for camera lock
 TsbTab:AddToggle({
-    Name = "Camera Lock on F",
+    Name = "Camera Lock on F fsdfs",
     Default = false,
     Callback = function(Value)
         cameraLockEnabled = Value
