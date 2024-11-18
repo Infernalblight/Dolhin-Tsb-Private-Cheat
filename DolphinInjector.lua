@@ -12,7 +12,7 @@ screenGui.ResetOnSpawn = false
 
 -- Create Main Frame (UI Container)
 local mainFrame = Instance.new("Frame")
-mainFrame.Size = UDim2.new(0.25, 0, 0.2, 0)  -- Smaller UI
+mainFrame.Size = UDim2.new(0.25, 0, 0.2, 0)
 mainFrame.Position = UDim2.new(0.375, 0, 0.4, 0)
 mainFrame.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
 mainFrame.BorderSizePixel = 0
@@ -80,16 +80,42 @@ innerLoadingBar.BackgroundColor3 = Color3.fromRGB(70, 130, 180)
 innerLoadingBar.BorderSizePixel = 0
 innerLoadingBar.Parent = loadingBarBg
 
--- Create Progress Label (Larger Text)
+-- Create Progress Label
 local progressLabel = Instance.new("TextLabel")
 progressLabel.Size = UDim2.new(1, 0, 0.3, 0)
 progressLabel.Position = UDim2.new(0, 0, 0.5, 0)
 progressLabel.BackgroundTransparency = 1
 progressLabel.Text = "0%"
-progressLabel.TextSize = 30  -- Increased the text size
+progressLabel.TextSize = 30
 progressLabel.Font = Enum.Font.GothamBold
 progressLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
 progressLabel.Parent = loadingBarBg
+
+-- Create Pop-up Frame for 50% Progress
+local popupFrame = Instance.new("Frame")
+popupFrame.Size = UDim2.new(0.3, 0, 0.15, 0)
+popupFrame.Position = UDim2.new(0.5, 0, 0.7, 0)
+popupFrame.AnchorPoint = Vector2.new(0.5, 0.5)
+popupFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+popupFrame.BackgroundTransparency = 0.5
+popupFrame.Visible = false
+popupFrame.Parent = screenGui
+
+-- Add Rounded Corners to Pop-up
+local popupCorner = Instance.new("UICorner")
+popupCorner.CornerRadius = UDim.new(0, 8)
+popupCorner.Parent = popupFrame
+
+-- Create Pop-up Text Label
+local popupLabel = Instance.new("TextLabel")
+popupLabel.Size = UDim2.new(1, -20, 1, -20)
+popupLabel.Position = UDim2.new(0, 10, 0, 10)
+popupLabel.BackgroundTransparency = 1
+popupLabel.Text = "Fish Features are only for VIP+++\nDevelopers or Paid Promotion Youtubers!"
+popupLabel.TextScaled = true
+popupLabel.Font = Enum.Font.GothamBold
+popupLabel.TextColor3 = Color3.fromRGB(255, 255, 0)
+popupLabel.Parent = popupFrame
 
 -- Functions for Injecting
 local function startInjecting()
@@ -100,6 +126,13 @@ local function startInjecting()
         local progress = (tick() - startTime) / totalTime
         innerLoadingBar.Size = UDim2.new(progress, 0, 1, 0)
         progressLabel.Text = math.floor(progress * 100) .. "%"
+        
+        -- Show pop-up at 50% progress
+        if math.floor(progress * 100) == 50 then
+            popupFrame.Visible = true
+            wait(10) -- Show for 10 seconds
+            popupFrame.Visible = false
+        end
         wait(0.1)
     end
 
