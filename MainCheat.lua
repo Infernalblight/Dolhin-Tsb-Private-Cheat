@@ -3,7 +3,7 @@ local OrionLib = loadstring(game:HttpGet(('https://raw.githubusercontent.com/shl
 local Window = OrionLib:MakeWindow({Name = "Dolphin Fire", HidePremium = false, SaveConfig = true, ConfigFolder = "OrionTest"})
 
 local TsbTab = Window:MakeTab({
-	Name = "Tsb",
+	Name = "Character",
 	Icon = "rbxassetid://4483345998",
 	PremiumOnly = false
 })
