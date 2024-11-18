@@ -275,6 +275,8 @@ TsbTab:AddToggle({
 
 
 
+
+
 local LSTab = Window:MakeTab({
 	Name = "No Limit Lifting Simulator",
 	Icon = "rbxassetid://4483345998",
