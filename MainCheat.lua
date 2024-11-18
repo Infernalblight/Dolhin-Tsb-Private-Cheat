@@ -265,42 +265,12 @@ TsbTab:AddToggle({
     end
 })
 
--- Variable to track the toggle state
-local infSideDashesEnabled = false
-
--- Adding the toggle to the tab
-Tab:AddToggle({
-    Name = "Inf Side Dashes",
-    Default = false,
-    Callback = function(Value)
-        infSideDashesEnabled = Value  -- Store the current toggle state
-        if infSideDashesEnabled then
-            print("Inf Side Dashes Enabled")
-            -- Insert your script here to enable side dashes
-        else
-            print("Inf Side Dashes Disabled")
-            -- Insert your script here to disable side dashes
-        end
-    end    
+TsbTab:AddButton({
+	Name = "Inf Side dash",
+	Callback = function()
+      		print("button pressed")
+  	end    
 })
-
--- Example functionality that uses the toggle
--- This part checks if the toggle is on/off and performs an action
-game:GetService("UserInputService").InputBegan:Connect(function(input, gameProcessed)
-    if gameProcessed then return end
-
-    -- Example: Dash when pressing 'A' or 'D' if the toggle is enabled
-    if infSideDashesEnabled then
-        if input.KeyCode == Enum.KeyCode.A then
-            print("Dashing Left!") -- Replace with your dash code
-            -- Your dash logic for the left side
-        elseif input.KeyCode == Enum.KeyCode.D then
-            print("Dashing Right!") -- Replace with your dash code
-            -- Your dash logic for the right side
-        end
-    end
-end)
-
 
 local LSTab = Window:MakeTab({
 	Name = "No Limit Lifting Simulator",
