@@ -266,7 +266,7 @@ TsbTab:AddToggle({
 })
 
 TsbTab:AddButton({
-	Name = "Inf Side dash",
+	Name = "Inf Side Tp Dashes",
 	Callback = function()
 	loadstring(game:HttpGet('https://raw.githubusercontent.com/Infernalblight/Dolhin-Tsb-Private-Cheat/refs/heads/main/Inf%20Side%20dashes%20Dolphin438908509438509348509438690548t098409.lua'))()
   	end    
