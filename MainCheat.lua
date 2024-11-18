@@ -212,22 +212,23 @@ local function lockCameraToPlayer(targetPlayer)
     end
 end
 
--- Function to enable the camera lock feature
-local function enableCameraLock()
-    -- Connect input events
+-- Function to handle the key events when camera lock is enabled
+local function startCameraLock()
+    -- Handle the InputBegan event
     inputBeganConnection = UserInputService.InputBegan:Connect(function(input)
         if input.KeyCode == Enum.KeyCode.F then
             holdingF = true
         end
     end)
 
+    -- Handle the InputEnded event
     inputEndedConnection = UserInputService.InputEnded:Connect(function(input)
         if input.KeyCode == Enum.KeyCode.F then
             holdingF = false
         end
     end)
 
-    -- Continuously update the camera while holding F
+    -- Continuously update the camera when holding F
     renderSteppedConnection = RunService.RenderStepped:Connect(function()
         if holdingF then
             local nearestPlayer = getNearestPlayer()
@@ -236,9 +237,9 @@ local function enableCameraLock()
     end)
 end
 
--- Function to disable the camera lock feature
-local function disableCameraLock()
-    -- Disconnect all connections related to camera lock
+-- Function to stop the camera lock
+local function stopCameraLock()
+    -- Disconnect all event listeners to stop camera locking
     if inputBeganConnection then
         inputBeganConnection:Disconnect()
         inputBeganConnection = nil
@@ -255,21 +256,23 @@ local function disableCameraLock()
     end
 end
 
--- Toggle for Camera Lock to Nearest Player
+-- Add Toggle for camera lock
 TsbTab:AddToggle({
-    Name = "Camera Lock to Nearest Player",
-    Default = false,  -- Default state of the toggle is off
+    Name = "Camera Lock on F",
+    Default = false,
     Callback = function(Value)
         cameraLockEnabled = Value
-        print("Camera Lock " .. (Value and "Enabled" or "Disabled"))
+        print("Camera Lock " .. (cameraLockEnabled and "Enabled" or "Disabled"))
 
         if cameraLockEnabled then
-            enableCameraLock()
+            startCameraLock()
         else
-            disableCameraLock()
+            stopCameraLock()
         end
-    end    
+    end
 })
+
+
 
 
 local LSTab = Window:MakeTab({
