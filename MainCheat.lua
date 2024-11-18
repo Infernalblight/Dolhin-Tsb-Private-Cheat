@@ -77,12 +77,71 @@ TsbTab:AddButton({
   	end    
 })
 
-TsbTab:AddButton({
-	Name = "Dash Back Aimbot",
-	Callback = function()
-      		print("button pressed")
-  	end    
+local Players = game:GetService("Players")
+local UserInputService = game:GetService("UserInputService")
+local RunService = game:GetService("RunService")
+
+local player = Players.LocalPlayer
+local humanoidRootPart = player.Character and player.Character:WaitForChild("HumanoidRootPart")
+local teleporting = false
+
+-- Function to get the closest player
+local function getClosestPlayer()
+    local closestPlayer = nil
+    local shortestDistance = math.huge
+
+    for _, otherPlayer in pairs(Players:GetPlayers()) do
+        if otherPlayer ~= player and otherPlayer.Character and otherPlayer.Character:FindFirstChild("HumanoidRootPart") then
+            local targetRootPart = otherPlayer.Character.HumanoidRootPart
+            local distance = (humanoidRootPart.Position - targetRootPart.Position).Magnitude
+
+            if distance < shortestDistance then
+                shortestDistance = distance
+                closestPlayer = otherPlayer
+            end
+        end
+    end
+
+    return closestPlayer
+end
+
+-- Toggle for Q Teleport
+TsbTab:AddToggle({
+    Name = "Q Tp",
+    Default = false,
+    Callback = function(Value)
+        if Value then
+            print("Q Tp Enabled")
+            
+            -- Monitor the Q key for teleport activation
+            UserInputService.InputBegan:Connect(function(input, gameProcessed)
+                if gameProcessed then return end
+                if input.KeyCode == Enum.KeyCode.Q and not teleporting then
+                    teleporting = true
+                    local endTime = tick() + 0.7 -- Teleport duration (0.7 seconds)
+
+                    -- Loop teleporting for 0.7 seconds
+                    while tick() < endTime and Value do
+                        local targetPlayer = getClosestPlayer()
+                        if targetPlayer and targetPlayer.Character then
+                            local targetRootPart = targetPlayer.Character:FindFirstChild("HumanoidRootPart")
+                            if targetRootPart then
+                                -- Teleport behind the target player
+                                local backPosition = targetRootPart.Position - targetRootPart.CFrame.LookVector * 3
+                                humanoidRootPart.CFrame = CFrame.new(backPosition, targetRootPart.Position)
+                            end
+                        end
+                        RunService.RenderStepped:Wait()
+                    end
+                    teleporting = false
+                end
+            end)
+        else
+            print("Q Tp Disabled")
+        end
+    end    
 })
+
 
 local LSTab = Window:MakeTab({
 	Name = "No Limit Lifting Simulator",
