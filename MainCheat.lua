@@ -180,6 +180,12 @@ local RunService = game:GetService("RunService")
 local Camera = workspace.CurrentCamera
 local LocalPlayer = Players.LocalPlayer
 
+local holdingF = false
+local cameraLockEnabled = false
+local inputBeganConnection
+local inputEndedConnection
+local renderSteppedConnection
+
 -- Function to find the nearest player
 local function getNearestPlayer()
     local nearestPlayer = nil
@@ -206,55 +212,64 @@ local function lockCameraToPlayer(targetPlayer)
     end
 end
 
+-- Function to enable the camera lock feature
+local function enableCameraLock()
+    -- Connect input events
+    inputBeganConnection = UserInputService.InputBegan:Connect(function(input)
+        if input.KeyCode == Enum.KeyCode.F then
+            holdingF = true
+        end
+    end)
+
+    inputEndedConnection = UserInputService.InputEnded:Connect(function(input)
+        if input.KeyCode == Enum.KeyCode.F then
+            holdingF = false
+        end
+    end)
+
+    -- Continuously update the camera while holding F
+    renderSteppedConnection = RunService.RenderStepped:Connect(function()
+        if holdingF then
+            local nearestPlayer = getNearestPlayer()
+            lockCameraToPlayer(nearestPlayer)
+        end
+    end)
+end
+
+-- Function to disable the camera lock feature
+local function disableCameraLock()
+    -- Disconnect all connections related to camera lock
+    if inputBeganConnection then
+        inputBeganConnection:Disconnect()
+        inputBeganConnection = nil
+    end
+
+    if inputEndedConnection then
+        inputEndedConnection:Disconnect()
+        inputEndedConnection = nil
+    end
+
+    if renderSteppedConnection then
+        renderSteppedConnection:Disconnect()
+        renderSteppedConnection = nil
+    end
+end
+
 -- Toggle for Camera Lock to Nearest Player
 TsbTab:AddToggle({
     Name = "Camera Lock to Nearest Player",
     Default = false,  -- Default state of the toggle is off
     Callback = function(Value)
-        local cameraLockEnabled = Value
-        local holdingF = false
-
-        -- When the toggle is enabled or disabled, reset holdingF
-        if cameraLockEnabled then
-            -- Check for holding the F key
-            UserInputService.InputBegan:Connect(function(input)
-                if input.KeyCode == Enum.KeyCode.F then
-                    holdingF = true
-                end
-            end)
-
-            UserInputService.InputEnded:Connect(function(input)
-                if input.KeyCode == Enum.KeyCode.F then
-                    holdingF = false
-                end
-            end)
-
-            -- Continuously update the camera when holding F if camera lock is enabled
-            RunService.RenderStepped:Connect(function()
-                if cameraLockEnabled and holdingF then
-                    local nearestPlayer = getNearestPlayer()
-                    lockCameraToPlayer(nearestPlayer)
-                end
-            end)
-        end
-
-        -- Ensure the camera lock is functional after respawning
-        Players.LocalPlayer.CharacterAdded:Connect(function()
-            -- Reset the camera lock state when respawned
-            if cameraLockEnabled then
-                holdingF = false  -- Reset holding state if the character respawns
-            end
-        end)
-        
+        cameraLockEnabled = Value
         print("Camera Lock " .. (Value and "Enabled" or "Disabled"))
+
+        if cameraLockEnabled then
+            enableCameraLock()
+        else
+            disableCameraLock()
+        end
     end    
 })
-
---[[  
-Name = <string> - The name of the toggle.
-Default = <bool> - The default value of the toggle.
-Callback = <function> - The function of the toggle.
-]] 
 
 
 local LSTab = Window:MakeTab({
