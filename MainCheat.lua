@@ -13,10 +13,10 @@ local Section = TsbTab:AddSection({
 })
 
 OrionLib:MakeNotification({
-	Name = "UHUH",
-	Content = "YOU EXECUTED DOKPHIN PRIVATE HUB",
+	Name = "Yes",
+	Content = "YOU EXECUTED DOLPHIN PRIVATE HUB",
 	Image = "rbxassetid://4483345998",
-	Time = 5
+	Time = 30
 })
 
 TsbTab:AddButton({
