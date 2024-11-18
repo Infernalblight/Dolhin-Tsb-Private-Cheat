@@ -82,10 +82,23 @@ local UserInputService = game:GetService("UserInputService")
 local RunService = game:GetService("RunService")
 
 local player = Players.LocalPlayer
-local humanoidRootPart = player.Character and player.Character:WaitForChild("HumanoidRootPart")
+local humanoidRootPart
 local teleporting = false
 local qTpEnabled = false
 local inputConnection
+
+-- Function to update `humanoidRootPart` reference when character changes
+local function updateCharacterReferences()
+    humanoidRootPart = player.Character and player.Character:WaitForChild("HumanoidRootPart")
+end
+
+-- Connect to CharacterAdded to update references after respawn
+player.CharacterAdded:Connect(function()
+    updateCharacterReferences()
+end)
+
+-- Initialize references for the first time
+updateCharacterReferences()
 
 -- Function to get the closest player
 local function getClosestPlayer()
@@ -135,7 +148,7 @@ TsbTab:AddToggle({
                         local targetPlayer = getClosestPlayer()
                         if targetPlayer and targetPlayer.Character then
                             local targetRootPart = targetPlayer.Character:FindFirstChild("HumanoidRootPart")
-                            if targetRootPart then
+                            if targetRootPart and humanoidRootPart then
                                 -- Teleport behind the target player
                                 local backPosition = targetRootPart.Position - targetRootPart.CFrame.LookVector * 3
                                 humanoidRootPart.CFrame = CFrame.new(backPosition, targetRootPart.Position)
