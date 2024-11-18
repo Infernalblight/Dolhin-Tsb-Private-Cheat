@@ -70,13 +70,6 @@ TsbTab:AddButton({
   	end    
 })
 
-TsbTab:AddButton({
-	Name = "Block Aimbot",
-	Callback = function()
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/UniDCYT/Dolhin-Tsb-Private-Cheat/refs/heads/main/32OIFTRJERLKDJFL34JFRLKD.lua"))()
-  	end    
-})
-
 local Players = game:GetService("Players")
 local UserInputService = game:GetService("UserInputService")
 local RunService = game:GetService("RunService")
@@ -163,7 +156,7 @@ TsbTab:AddToggle({
     Default = false,
     Callback = function(Value)
         qTpEnabled = Value
-        print("Q Tp " .. (qTpEnabled and "Enabled" or "Disabled"))
+        print("Dash allways hit behind" .. (qTpEnabled and "Enabled" or "Disabled"))
 
         if qTpEnabled then
             enableQTeleport()
