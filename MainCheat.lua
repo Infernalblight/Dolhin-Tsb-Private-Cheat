@@ -77,6 +77,13 @@ TsbTab:AddButton({
   	end    
 })
 
+TsbTab:AddButton({
+	Name = "Dash Back Aimbot",
+	Callback = function()
+      		print("button pressed")
+  	end    
+})
+
 local LSTab = Window:MakeTab({
 	Name = "No Limit Lifting Simulator",
 	Icon = "rbxassetid://4483345998",
