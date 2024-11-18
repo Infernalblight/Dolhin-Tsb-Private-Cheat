@@ -266,6 +266,36 @@ TsbTab:AddToggle({
 })
 
 
+-- Create the toggle with a default value and callback function
+local isEnabled = false  -- This will store the current state of the toggle
+
+TsbTab:AddToggle({
+    Name = "Feature Toggle",
+    Default = false,
+    Callback = function(Value)
+        isEnabled = Value -- Store the toggle state
+        if isEnabled then
+            print("Toggle is ON")
+            -- Enable the feature or run some code here
+            enableFeature()
+        else
+            print("Toggle is OFF")
+            -- Disable the feature or run some other code here
+            disableFeature()
+        end
+    end    
+})
+
+-- Example functions to enable or disable a feature
+function enableFeature()
+    print("Feature enabled!")
+    -- Add your code here to enable specific functionality
+end
+
+function disableFeature()
+    print("Feature disabled!")
+    -- Add your code here to disable the functionality
+end
 
 
 
