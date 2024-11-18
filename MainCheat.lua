@@ -87,19 +87,6 @@ local teleporting = false
 local qTpEnabled = false
 local inputConnection
 
--- Function to update `humanoidRootPart` reference when character changes
-local function updateCharacterReferences()
-    humanoidRootPart = player.Character and player.Character:WaitForChild("HumanoidRootPart")
-end
-
--- Connect to CharacterAdded to update references after respawn
-player.CharacterAdded:Connect(function()
-    updateCharacterReferences()
-end)
-
--- Initialize references for the first time
-updateCharacterReferences()
-
 -- Function to get the closest player
 local function getClosestPlayer()
     local closestPlayer = nil
@@ -120,6 +107,56 @@ local function getClosestPlayer()
     return closestPlayer
 end
 
+-- Function to enable Q teleport
+local function enableQTeleport()
+    if inputConnection then
+        inputConnection:Disconnect()
+    end
+
+    inputConnection = UserInputService.InputBegan:Connect(function(input, gameProcessed)
+        if gameProcessed then return end
+        if input.KeyCode == Enum.KeyCode.Q and not teleporting and qTpEnabled then
+            teleporting = true
+            local endTime = tick() + 0.7 -- Teleport duration (0.7 seconds)
+
+            -- Loop teleporting for 0.7 seconds
+            while tick() < endTime and qTpEnabled do
+                local targetPlayer = getClosestPlayer()
+                if targetPlayer and targetPlayer.Character then
+                    local targetRootPart = targetPlayer.Character:FindFirstChild("HumanoidRootPart")
+                    if targetRootPart and humanoidRootPart then
+                        -- Teleport behind the target player
+                        local backPosition = targetRootPart.Position - targetRootPart.CFrame.LookVector * 3
+                        humanoidRootPart.CFrame = CFrame.new(backPosition, targetRootPart.Position)
+                    end
+                end
+                RunService.RenderStepped:Wait()
+            end
+            teleporting = false
+        end
+    end)
+end
+
+-- Function to handle character updates and re-establish the toggle
+local function setupCharacter()
+    player.CharacterAdded:Connect(function()
+        player.Character:WaitForChild("HumanoidRootPart")
+        humanoidRootPart = player.Character:FindFirstChild("HumanoidRootPart")
+
+        if qTpEnabled then
+            enableQTeleport() -- Re-enable Q teleport after respawn
+        end
+    end)
+
+    -- Ensure we have the current character's humanoidRootPart
+    if player.Character then
+        humanoidRootPart = player.Character:FindFirstChild("HumanoidRootPart")
+    end
+end
+
+-- Initialize character setup
+setupCharacter()
+
 -- Toggle for Q Teleport
 TsbTab:AddToggle({
     Name = "Q Tp",
@@ -128,39 +165,13 @@ TsbTab:AddToggle({
         qTpEnabled = Value
         print("Q Tp " .. (qTpEnabled and "Enabled" or "Disabled"))
 
-        -- Disconnect any existing connection if toggle is disabled
-        if not qTpEnabled and inputConnection then
+        if qTpEnabled then
+            enableQTeleport()
+        elseif inputConnection then
             inputConnection:Disconnect()
             inputConnection = nil
-            return
         end
-
-        -- Connect Q key for teleport activation
-        if qTpEnabled then
-            inputConnection = UserInputService.InputBegan:Connect(function(input, gameProcessed)
-                if gameProcessed then return end
-                if input.KeyCode == Enum.KeyCode.Q and not teleporting then
-                    teleporting = true
-                    local endTime = tick() + 0.7 -- Teleport duration (0.7 seconds)
-
-                    -- Loop teleporting for 0.7 seconds
-                    while tick() < endTime and qTpEnabled do
-                        local targetPlayer = getClosestPlayer()
-                        if targetPlayer and targetPlayer.Character then
-                            local targetRootPart = targetPlayer.Character:FindFirstChild("HumanoidRootPart")
-                            if targetRootPart and humanoidRootPart then
-                                -- Teleport behind the target player
-                                local backPosition = targetRootPart.Position - targetRootPart.CFrame.LookVector * 3
-                                humanoidRootPart.CFrame = CFrame.new(backPosition, targetRootPart.Position)
-                            end
-                        end
-                        RunService.RenderStepped:Wait()
-                    end
-                    teleporting = false
-                end
-            end)
-        end
-    end    
+    end
 })
 
 
