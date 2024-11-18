@@ -152,7 +152,7 @@ setupCharacter()
 
 -- Toggle for Q Teleport
 TsbTab:AddToggle({
-    Name = "Q Tp",
+    Name = "Dash Allways Hit Behind",
     Default = false,
     Callback = function(Value)
         qTpEnabled = Value
