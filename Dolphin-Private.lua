@@ -1,4 +1,4 @@
-local key = "657-456547567546-47567456-5765757657-5676587976654-65876854-675765765"
+local key = "45utiougi5rjgn546ktgrfmeilkgm65iugtnjriuohn656¤%/&(/&%/¤¤%&&%()(/(&/&(/&/(/&(&(/&)(&//&%YTHGu6kythttljk6ylætklæhjk56(/)=(/Y/)/(=(II/=OILUKO/(IUKJP)(OLIIYUKJHGNBVGBFBBFGDrlfgjdklgjdl"
 
 -- Create UI elements
 local Players = game:GetService("Players")
