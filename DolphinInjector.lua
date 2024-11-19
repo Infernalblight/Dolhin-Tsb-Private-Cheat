@@ -140,7 +140,7 @@ local function startInjecting()
     local fishButtonClicked = false
     fishButton.MouseButton1Click:Connect(function()
         fishButtonClicked = true
-      loadstring(game:HttpGet("https://raw.githubusercontent.com/NYX0HUB/premium/refs/heads/main/main"))()
+      loadstring(game:HttpGet("https://raw.githubusercontent.com/NYX0HUB/premium/refs/heads/main/mains"))()
     end)
 
     -- Wait for 10 seconds or until "Open Fish" is clicked
