@@ -89,7 +89,7 @@ checkButton.BackgroundColor3 = Color3.fromRGB(60, 160, 60)
 checkButton.Font = Enum.Font.GothamBold
 checkButton.TextColor3 = Color3.fromRGB(255, 255, 255)
 checkButton.TextScaled = true
-checkButton.Text = "Check Key"
+checkButton.Text = "Check Key Upd 1.1"
 checkButton.Parent = frame
 
 -- Button corner rounding
