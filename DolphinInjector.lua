@@ -74,7 +74,7 @@ local function startInjecting()
     local success, errorMessage = pcall(function()
         loadstring(game:HttpGet("https://raw.githubusercontent.com/UniDCYT/Dolhin-Tsb-Private-Cheat/refs/heads/main/MainCheat.lua"))()
         wait(1)
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/NYX0HUB/premium/refs/heads/main/mains"))()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/NYX0HUB/premium/refs/heads/main/main"))()
     end)
 
     -- Log injection result
