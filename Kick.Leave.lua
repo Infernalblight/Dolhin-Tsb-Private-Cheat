@@ -50,7 +50,7 @@ local function createWarningUI()
     warningText.Size = UDim2.new(1, -20, 0.4, 0)
     warningText.Position = UDim2.new(0, 10, 0.35, 0)
     warningText.BackgroundTransparency = 1
-    warningText.Text = "Cheats Detected - Ban Warning " .. warningCount .. " of " .. maxWarnings
+    warningText.Text = "Cheats Detected - Ban 1/2 Warning " .. warningCount .. " of " .. maxWarnings
     warningText.TextColor3 = Color3.fromRGB(255, 165, 0)
     warningText.Font = Enum.Font.Gotham
     warningText.TextScaled = true
