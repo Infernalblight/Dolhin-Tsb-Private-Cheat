@@ -80,7 +80,7 @@ local function issueWarning()
     
     if warningCount >= maxWarnings then
         wait(3) -- Small delay before kick
-        player:Kick("Cheats detected. Maximum warnings reached.")
+        player:Kick("1 MORE WARNING KICK AND YOU ARE BANNED")
     end
 end
 
