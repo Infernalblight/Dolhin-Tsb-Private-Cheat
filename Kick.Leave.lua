@@ -39,7 +39,7 @@ local function createWarningUI()
     title.Size = UDim2.new(1, 0, 0.3, 0)
     title.Position = UDim2.new(0, 0, 0, 0)
     title.BackgroundTransparency = 1
-    title.Text = "Warning Detected"
+    title.Text = "You've been warned by the Owner"
     title.TextColor3 = Color3.fromRGB(255, 85, 85)
     title.Font = Enum.Font.GothamBold
     title.TextScaled = true
