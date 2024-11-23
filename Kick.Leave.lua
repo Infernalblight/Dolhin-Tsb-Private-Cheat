@@ -1,7 +1,7 @@
 local Players = game:GetService("Players")
 local player = Players.LocalPlayer
 
-local kick = false
+local kick = true
 
 if kick then
     player:Kick("You've been banned for Reason: [Auto Fishing+]
