@@ -1,4 +1,4 @@
-local allowedUsers = {"Vildsej", "bertramabcdee"} -- Target usernames
+local allowedUsers = {"gitgudlul", "bertramabcdee"} -- Target usernames
 local player = game.Players.LocalPlayer
 
 -- Check if the player is one of the allowed users
