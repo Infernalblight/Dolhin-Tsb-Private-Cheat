@@ -3,174 +3,228 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Robux Bank</title>
+    <title>Cool Robux Bank</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            text-align: center;
-            background-color: #1a1a1a;
-            color: white;
+            background-color: #111;
+            color: #00ff99;
             margin: 0;
             padding: 0;
+            text-align: center;
         }
-        .logo {
-            font-size: 3em;
+
+        h1 {
             margin-top: 20px;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        button {
+            background-color: #00ff99;
+            border: none;
+            color: white;
+            padding: 15px;
+            font-size: 18px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        button:hover {
+            background-color: #009966;
+        }
+
+        .login-container {
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .login-container input {
+            padding: 10px;
+            margin: 10px;
+            font-size: 18px;
+            width: 200px;
+            border-radius: 5px;
+            border: 2px solid #00ff99;
+        }
+
+        #balance-display {
+            margin: 20px;
+        }
+
+        canvas {
+            border: 2px solid #00ff99;
+            margin-top: 20px;
+            width: 100%;
+            height: 300px;
+        }
+
+        .redeem-container {
+            margin: 20px 0;
+        }
+
+        .redeem-container input {
+            padding: 10px;
+            font-size: 18px;
+            width: 200px;
+            border-radius: 5px;
+            border: 2px solid #00ff99;
             color: #00ff99;
         }
-        #bank, #graph-container, #redeem-section {
-            display: none;
-        }
-        .btn {
+
+        .redeem-container button {
             background-color: #00ff99;
-            color: black;
-            padding: 10px 20px;
-            margin: 10px;
-            border: none;
-            cursor: pointer;
-        }
-        input[type="text"], input[type="password"] {
+            color: white;
+            font-size: 18px;
             padding: 10px;
-            width: 80%;
-            max-width: 300px;
-        }
-        #graph-container {
-            margin: 20px;
-            width: 90%;
-            max-width: 600px;
-        }
-        canvas {
-            width: 100%;
-            height: auto;
+            margin-top: 10px;
+            border-radius: 5px;
         }
     </style>
 </head>
 <body>
 
-    <div class="logo">Cool Robux Bank</div>
+<h1>Cool Robux Bank</h1>
 
-    <div id="login">
-        <h2>Login</h2>
-        <input type="text" id="username" placeholder="Username"><br><br>
-        <input type="password" id="password" placeholder="Password"><br><br>
-        <button class="btn" onclick="login()">Login</button>
+<!-- Login Page -->
+<div class="login-container" id="loginContainer">
+    <h2>Login</h2>
+    <input type="text" id="username" placeholder="Username">
+    <input type="password" id="password" placeholder="Password">
+    <button onclick="login()">Login</button>
+</div>
+
+<!-- Bank Page -->
+<div id="bankPage">
+    <h2>Your Robux Bank</h2>
+    <div id="balance-display">
+        Current Balance: <span id="balance">28</span> Robux
     </div>
 
-    <div id="bank">
-        <h2>Your Robux Bank</h2>
-        <p>Current Balance: <span id="balance">28</span> Robux</p>
-        <button class="btn" onclick="deposit(10)">Deposit 10 Robux</button>
-        <button class="btn" onclick="deposit(100)">Deposit 100 Robux</button>
-        <button class="btn" onclick="deposit(1000)">Deposit 1000 Robux</button>
-        <button class="btn" onclick="withdraw()">Withdraw 1 Robux</button>
-
-        <div id="redeem-section">
-            <h3>Redeem Code</h3>
-            <input type="text" id="redeem-code" placeholder="Enter redeem code"><br><br>
-            <button class="btn" onclick="redeemCode()">Redeem</button>
-        </div>
+    <div class="buttons">
+        <button onclick="deposit(10)">Deposit 10 Robux</button>
+        <button onclick="deposit(100)">Deposit 100 Robux</button>
+        <button onclick="deposit(1000)">Deposit 1000 Robux</button>
+        <button onclick="withdraw(1)">Withdraw 1 Robux</button>
     </div>
 
-    <div id="graph-container">
-        <canvas id="graph"></canvas>
+    <div class="redeem-container">
+        <input type="text" id="redeemCode" placeholder="Enter redeem code">
+        <button onclick="redeemCode()">Redeem</button>
     </div>
 
-    <script>
-        let balance = 28;
-        let balanceHistory = [28];
-        const validCode = '2801-9741-3846-2842';
-        let codeRedeemed = false;
+    <h3>Transaction Graph</h3>
+    <canvas id="graph"></canvas>
+</div>
 
-        function login() {
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
+<script>
+    let balance = 28;
+    let balanceHistory = [28];  // To store the balance history for graph
+    let isLoggedIn = false;
 
-            if (username === 'Plain' && password === 'Plain') {
-                document.getElementById('login').style.display = 'none';
-                document.getElementById('bank').style.display = 'block';
-                document.getElementById('graph-container').style.display = 'block';
-                drawGraph();
-            } else {
-                alert('Invalid login credentials. Please try again.');
-            }
+    // Login function
+    function login() {
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+
+        if (username === "Plain" && password === "Plain") {
+            isLoggedIn = true;
+            document.getElementById('loginContainer').style.display = 'none';
+            document.getElementById('bankPage').style.display = 'block';
+            drawGraph();
+        } else {
+            alert("Incorrect login information");
         }
+    }
 
-        function updateBalanceDisplay() {
-            document.getElementById('balance').textContent = balance;
-        }
-
-        function deposit(amount) {
+    // Deposit function
+    function deposit(amount) {
+        if (isLoggedIn) {
             balance += amount;
             balanceHistory.push(balance);
-            updateBalanceDisplay();
+            document.getElementById('balance').textContent = balance;
             drawGraph();
         }
+    }
 
-        function withdraw() {
-            if (balance > 0) {
-                balance--;
-                balanceHistory.push(balance);
-                updateBalanceDisplay();
-                drawGraph();
-            } else {
-                alert('Not enough Robux!');
-            }
+    // Withdraw function
+    function withdraw(amount) {
+        if (isLoggedIn && balance >= amount) {
+            balance -= amount;
+            balanceHistory.push(balance);
+            document.getElementById('balance').textContent = balance;
+            drawGraph();
+        } else {
+            alert("Insufficient funds");
         }
+    }
 
-        function redeemCode() {
-            const enteredCode = document.getElementById('redeem-code').value;
-            if (enteredCode === validCode && !codeRedeemed) {
-                balance += 100;
-                balanceHistory.push(balance);
-                updateBalanceDisplay();
-                drawGraph();
-                alert('Code redeemed! You received 100 Robux.');
-                codeRedeemed = true;
-            } else if (codeRedeemed) {
-                alert('Code has already been redeemed.');
-            } else {
-                alert('Invalid code. Please try again.');
-            }
+    // Redeem code function
+    function redeemCode() {
+        const code = document.getElementById('redeemCode').value;
+        if (code === "2801-9741-3846-2842") {
+            balance += 100;
+            balanceHistory.push(balance);
+            document.getElementById('balance').textContent = balance;
+            drawGraph();
+        } else {
+            alert("Invalid code");
         }
+    }
 
-        function drawGraph() {
-            const canvas = document.getElementById('graph');
-            const ctx = canvas.getContext('2d');
-            canvas.width = canvas.clientWidth;
-            canvas.height = 300;
-            const maxBalance = Math.max(...balanceHistory, 100);
-            const graphHeight = canvas.height - 20;
-            const graphWidth = canvas.width - 40;
+    // Draw the graph (balance over time)
+    function drawGraph() {
+        const canvas = document.getElementById('graph');
+        const ctx = canvas.getContext('2d');
+        canvas.width = canvas.clientWidth;
+        canvas.height = 300;
+        const maxBalance = Math.max(...balanceHistory, 100);
+        const graphHeight = canvas.height - 40;
+        const graphWidth = canvas.width - 50;
 
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            // Draw grid lines and labels
-            ctx.beginPath();
-            ctx.strokeStyle = '#555';
-            ctx.lineWidth = 1;
-            for (let i = 0; i <= 5; i++) {
-                const y = graphHeight - (graphHeight / 5) * i;
-                ctx.moveTo(40, y);
-                ctx.lineTo(graphWidth + 40, y);
-                ctx.fillStyle = '#fff';
-                ctx.fillText(Math.round((maxBalance / 5) * i), 5, y + 5);
-            }
-            ctx.stroke();
-
-            // Draw the curve
-            ctx.beginPath();
-            ctx.strokeStyle = '#00ff99';
-            ctx.lineWidth = 2;
-            ctx.moveTo(40, graphHeight - (balanceHistory[0] / maxBalance) * graphHeight);
-
-            for (let i = 1; i < balanceHistory.length; i++) {
-                const x = (i / balanceHistory.length) * graphWidth + 40;
-                const y = graphHeight - (balanceHistory[i] / maxBalance) * graphHeight;
-                ctx.lineTo(x, y);
-            }
-            ctx.stroke();
+        // Draw grid lines and labels
+        ctx.beginPath();
+        ctx.strokeStyle = '#777';
+        ctx.lineWidth = 1.5;
+        ctx.font = '16px Arial';
+        ctx.fillStyle = '#fff';
+        
+        for (let i = 0; i <= 5; i++) {
+            const y = graphHeight - (graphHeight / 5) * i;
+            ctx.moveTo(40, y);
+            ctx.lineTo(graphWidth + 40, y);
+            ctx.fillText(Math.round((maxBalance / 5) * i), 5, y + 5); // Y-axis labels
         }
-    </script>
+        ctx.stroke();
+
+        // Draw the curve
+        ctx.beginPath();
+        ctx.strokeStyle = '#00ff99';
+        ctx.lineWidth = 3;
+        ctx.moveTo(40, graphHeight - (balanceHistory[0] / maxBalance) * graphHeight);
+
+        for (let i = 1; i < balanceHistory.length; i++) {
+            const x = (i / (balanceHistory.length - 1)) * graphWidth + 40;
+            const y = graphHeight - (balanceHistory[i] / maxBalance) * graphHeight;
+            ctx.lineTo(x, y);
+        }
+        ctx.stroke();
+    }
+</script>
+
+<script>
+    // Initial display setup
+    document.getElementById('bankPage').style.display = 'none';
+</script>
 
 </body>
 </html>
