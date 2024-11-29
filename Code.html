@@ -16,7 +16,7 @@
             margin-top: 20px;
             color: #00ff99;
         }
-        #bank, #graph, #redeem-section {
+        #bank, #graph-container, #redeem-section {
             display: none;
         }
         .btn {
@@ -30,6 +30,9 @@
         input[type="text"], input[type="password"] {
             padding: 10px;
             width: 250px;
+        }
+        #graph-container {
+            margin-top: 20px;
         }
     </style>
 </head>
@@ -59,7 +62,9 @@
         </div>
     </div>
 
-    <canvas id="graph" width="500" height="200"></canvas>
+    <div id="graph-container">
+        <canvas id="graph" width="500" height="300"></canvas>
+    </div>
 
     <script>
         let balance = 28;
@@ -74,8 +79,7 @@
             if (username === 'Plain' && password === 'Plain') {
                 document.getElementById('login').style.display = 'none';
                 document.getElementById('bank').style.display = 'block';
-                document.getElementById('redeem-section').style.display = 'block';
-                document.getElementById('graph').style.display = 'block';
+                document.getElementById('graph-container').style.display = 'block';
                 drawGraph();
             } else {
                 alert('Invalid login credentials. Please try again.');
@@ -123,19 +127,36 @@
         function drawGraph() {
             const canvas = document.getElementById('graph');
             const ctx = canvas.getContext('2d');
+            const maxBalance = Math.max(...balanceHistory, 100);
+            const graphHeight = canvas.height - 20;
+            const graphWidth = canvas.width - 40;
+
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+            // Draw grid lines and labels
             ctx.beginPath();
-            ctx.moveTo(0, 200 - balanceHistory[0]);
-
-            for (let i = 1; i < balanceHistory.length; i++) {
-                const x = (i / balanceHistory.length) * canvas.width;
-                const y = 200 - (balanceHistory[i] / 2); // Adjust scale for the curve
-                ctx.lineTo(x, y);
+            ctx.strokeStyle = '#555';
+            ctx.lineWidth = 1;
+            for (let i = 0; i <= 5; i++) {
+                const y = graphHeight - (graphHeight / 5) * i;
+                ctx.moveTo(40, y);
+                ctx.lineTo(graphWidth + 40, y);
+                ctx.fillStyle = '#fff';
+                ctx.fillText(Math.round((maxBalance / 5) * i), 5, y + 5);
             }
+            ctx.stroke();
 
+            // Draw the curve
+            ctx.beginPath();
             ctx.strokeStyle = '#00ff99';
             ctx.lineWidth = 2;
+            ctx.moveTo(40, graphHeight - (balanceHistory[0] / maxBalance) * graphHeight);
+
+            for (let i = 1; i < balanceHistory.length; i++) {
+                const x = (i / balanceHistory.length) * graphWidth + 40;
+                const y = graphHeight - (balanceHistory[i] / maxBalance) * graphHeight;
+                ctx.lineTo(x, y);
+            }
             ctx.stroke();
         }
     </script>
