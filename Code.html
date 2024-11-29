@@ -40,10 +40,11 @@
         }
 
         .login-container {
-            display: none;
+            display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
+            height: 100vh;
         }
 
         .login-container input {
@@ -102,7 +103,7 @@
 </div>
 
 <!-- Bank Page -->
-<div id="bankPage">
+<div id="bankPage" style="display: none;">
     <h2>Your Robux Bank</h2>
     <div id="balance-display">
         Current Balance: <span id="balance">28</span> Robux
@@ -222,7 +223,8 @@
 </script>
 
 <script>
-    // Initial display setup
+    // Initial display setup (Login page visible first)
+    document.getElementById('loginContainer').style.display = 'flex';
     document.getElementById('bankPage').style.display = 'none';
 </script>
 
