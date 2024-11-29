@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Robux Bank</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #1a1a1a;
+            color: white;
+        }
+        .logo {
+            font-size: 3em;
+            margin-top: 20px;
+            color: #00ff99;
+        }
+        #bank, #graph {
+            display: none;
+        }
+        .btn {
+            background-color: #00ff99;
+            color: black;
+            padding: 10px 20px;
+            margin: 10px;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="logo">Cool Robux Bank</div>
+
+    <div id="login">
+        <h2>Login</h2>
+        <input type="text" id="username" placeholder="Username"><br><br>
+        <input type="password" id="password" placeholder="Password"><br><br>
+        <button class="btn" onclick="login()">Login</button>
+    </div>
+
+    <div id="bank">
+        <h2>Your Robux Bank</h2>
+        <p>Current Balance: <span id="balance">28</span> Robux</p>
+        <button class="btn" onclick="deposit()">Deposit 1 Robux</button>
+        <button class="btn" onclick="withdraw()">Withdraw 1 Robux</button>
+    </div>
+
+    <canvas id="graph" width="500" height="200"></canvas>
+
+    <script>
+        let balance = 28;
+        let balanceHistory = [28];
+
+        function login() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            if (username === 'Plain' && password === 'Plain') {
+                document.getElementById('login').style.display = 'none';
+                document.getElementById('bank').style.display = 'block';
+                document.getElementById('graph').style.display = 'block';
+                drawGraph();
+            } else {
+                alert('Invalid login. Use username: Plain and password: Plain');
+            }
+        }
+
+        function updateBalanceDisplay() {
+            document.getElementById('balance').textContent = balance;
+        }
+
+        function deposit() {
+            balance++;
+            balanceHistory.push(balance);
+            updateBalanceDisplay();
+            drawGraph();
+        }
+
+        function withdraw() {
+            if (balance > 0) {
+                balance--;
+                balanceHistory.push(balance);
+                updateBalanceDisplay();
+                drawGraph();
+            } else {
+                alert('Not enough Robux!');
+            }
+        }
+
+        function drawGraph() {
+            const canvas = document.getElementById('graph');
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            ctx.beginPath();
+            ctx.moveTo(0, 200 - balanceHistory[0]);
+
+            for (let i = 1; i < balanceHistory.length; i++) {
+                const x = (i / balanceHistory.length) * canvas.width;
+                const y = 200 - balanceHistory[i];
+                ctx.lineTo(x, y);
+            }
+
+            ctx.strokeStyle = '#00ff99';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+        }
+    </script>
+
+</body>
+</html>
