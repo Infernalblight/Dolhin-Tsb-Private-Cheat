@@ -27,7 +27,7 @@
             border: none;
             cursor: pointer;
         }
-        input[type="text"] {
+        input[type="text"], input[type="password"] {
             padding: 10px;
             width: 250px;
         }
@@ -47,7 +47,9 @@
     <div id="bank">
         <h2>Your Robux Bank</h2>
         <p>Current Balance: <span id="balance">28</span> Robux</p>
-        <button class="btn" onclick="deposit()">Deposit 1 Robux</button>
+        <button class="btn" onclick="deposit(10)">Deposit 10 Robux</button>
+        <button class="btn" onclick="deposit(100)">Deposit 100 Robux</button>
+        <button class="btn" onclick="deposit(1000)">Deposit 1000 Robux</button>
         <button class="btn" onclick="withdraw()">Withdraw 1 Robux</button>
 
         <div id="redeem-section">
@@ -76,7 +78,7 @@
                 document.getElementById('graph').style.display = 'block';
                 drawGraph();
             } else {
-                alert('Invalid login. Use username: Plain and password: Plain');
+                alert('Invalid login credentials. Please try again.');
             }
         }
 
@@ -84,8 +86,8 @@
             document.getElementById('balance').textContent = balance;
         }
 
-        function deposit() {
-            balance++;
+        function deposit(amount) {
+            balance += amount;
             balanceHistory.push(balance);
             updateBalanceDisplay();
             drawGraph();
@@ -128,7 +130,7 @@
 
             for (let i = 1; i < balanceHistory.length; i++) {
                 const x = (i / balanceHistory.length) * canvas.width;
-                const y = 200 - balanceHistory[i];
+                const y = 200 - (balanceHistory[i] / 2); // Adjust scale for the curve
                 ctx.lineTo(x, y);
             }
 
