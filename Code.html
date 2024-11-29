@@ -10,6 +10,8 @@
             text-align: center;
             background-color: #1a1a1a;
             color: white;
+            margin: 0;
+            padding: 0;
         }
         .logo {
             font-size: 3em;
@@ -29,10 +31,17 @@
         }
         input[type="text"], input[type="password"] {
             padding: 10px;
-            width: 250px;
+            width: 80%;
+            max-width: 300px;
         }
         #graph-container {
-            margin-top: 20px;
+            margin: 20px;
+            width: 90%;
+            max-width: 600px;
+        }
+        canvas {
+            width: 100%;
+            height: auto;
         }
     </style>
 </head>
@@ -63,7 +72,7 @@
     </div>
 
     <div id="graph-container">
-        <canvas id="graph" width="500" height="300"></canvas>
+        <canvas id="graph"></canvas>
     </div>
 
     <script>
@@ -127,6 +136,8 @@
         function drawGraph() {
             const canvas = document.getElementById('graph');
             const ctx = canvas.getContext('2d');
+            canvas.width = canvas.clientWidth;
+            canvas.height = 300;
             const maxBalance = Math.max(...balanceHistory, 100);
             const graphHeight = canvas.height - 20;
             const graphWidth = canvas.width - 40;
